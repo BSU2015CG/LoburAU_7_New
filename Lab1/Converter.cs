@@ -77,29 +77,27 @@ namespace Grapics_Lab1
 
         public static ColorCMYK RGBtoCMYK(int R, int G, int B)
         {
-            double C, M, Y, K;
             double r = R / 255.0;
             double g = G / 255.0;
             double b = B / 255.0;
 
-            K = 1 - Math.Max(r, Math.Max(g, b));
-            if (1 - K == 0)
-                return new ColorCMYK(0, 0, 0, 0);
-
-            C = (1 - r - K) / (1 - K);
-            M = (1 - g - K) / (1 - K);
-            Y = (1 - b - K) / (1 - K);
+            int C = (int)((1 - r) * 100);
+            int M = (int)((1 - g) * 100);
+            int Y = (int)((1 - b) * 100);
+            int K = (int)((1 - Math.Max(r, Math.Max(g, b))) * 100);
 
             return new ColorCMYK(C, M, Y, K);
         }
 
-        public static ColorRGB CMYKtoRGB(double C, double M, double Y, double K)
+        public static ColorRGB CMYKtoRGB(int C, int M, int Y, int K)
         {
-            int R, G, B;
+            double c = C / 100.0;
+            double m = M / 100.0;
+            double y = Y / 100.0;
 
-            R = Convert.ToInt32(255.0 * (1 - C) * (1 - K));
-            G = Convert.ToInt32(255.0 * (1 - M) * (1 - K));
-            B = Convert.ToInt32(255.0 * (1 - Y) * (1 - K));
+            int R = (int)((1 - c) * 255);
+            int G = (int)((1 - m) * 255);
+            int B = (int)((1 - y) * 255);
 
             return new ColorRGB(R, G, B);
         }
@@ -248,3 +246,39 @@ namespace Grapics_Lab1
         }
     }
 }
+
+
+//int R, G, B;
+//            double X, Y, Z, _u, _v, r, g, b;
+//            double Yn = 1.0, xn = 95.047, yn = 100.0, zn = 108.883, Un, Vn; //D65
+
+//            if (L == 0)
+//                return new ColorRGB(0, 0, 0);
+
+//            Y = (L + 16) / 116;
+//            if (Math.Pow(Y, 3) > 0.008856)
+//                Y = Math.Pow(Y, 3);
+//            else
+//                Y = ((Y - 16) / 116) / 7.787;
+//            /*if(L <= 8)
+//                Y = Yn * L * Math.Pow(3/29.0, 3);
+//            else
+//            Y = Yn * Math.Pow((L + 16) / 116, 3);*/
+
+//            Un = 4 * xn / (xn + 15 * yn + 3 * zn);
+//            Vn = 9 * yn / (xn + 15 * yn + 3 * zn);
+//            _u = u / (13 * L) + Un;
+//            _v = v / (13 * L) + Vn;
+
+//            //Y = Y * 100.0;
+//            X = -(9*Y*_u) / ((_u - 4)*_v - _u*_v);
+//            Z = (9*Y - 15*_v*Y - _v*X) / (3*_v);
+
+//            /*X = Y*9*_u / (4*_v);
+//            Z = Y*(12-3*_u-20*_v) / (4*_v);*/
+
+//            R = Convert.ToInt32((3.24071 * X + (-1.53726) * Y + (-0.498571) * Z) * 255.0);
+//            G = Convert.ToInt32(((-0.969258) * X + 1.87599 * Y + 0.0415557 * Z) * 255.0);
+//            B = Convert.ToInt32((0.0556352 * X + (-0.203996) * Y + 1.05707 * Z) * 255.0);
+
+//            return new ColorRGB(R, G, B);

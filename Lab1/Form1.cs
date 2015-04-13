@@ -42,10 +42,10 @@ namespace Grapics_Lab1
             trackBarL.Value = L = Convert.ToInt32(hls.L * 100.0);
             trackBarS.Value = S = Convert.ToInt32(hls.S * 100.0);
             ColorCMYK cmyk = Converter.RGBtoCMYK(R, G, B);      //!!!!!
-            trackBarC.Value = C = Convert.ToInt32(cmyk.C * 100.0);
-            trackBarM.Value = M = Convert.ToInt32(cmyk.M * 100.0);
-            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y * 100.0);
-            trackBarK.Value = K = Convert.ToInt32(cmyk.K * 100.0);
+            trackBarC.Value = C = Convert.ToInt32(cmyk.C);
+            trackBarM.Value = M = Convert.ToInt32(cmyk.M);
+            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y);
+            trackBarK.Value = K = Convert.ToInt32(cmyk.K);
             ColorXYZ xyz = Converter.RGBtoXYZ(R, G, B);         //!!!!!
             trackBarX.Value = X = Convert.ToInt32(xyz.X * 100.0);
             trackBarY_.Value = Y_ = Convert.ToInt32(xyz.Y * 100.0);
@@ -114,10 +114,10 @@ namespace Grapics_Lab1
             G = trackBarG.Value = rgb.G;
             B = trackBarB.Value = rgb.B;
             ColorCMYK cmyk = Converter.RGBtoCMYK(R, G, B);           //!!!!!
-            trackBarC.Value = C = Convert.ToInt32(cmyk.C * 100.0);
-            trackBarM.Value = M = Convert.ToInt32(cmyk.M * 100.0);
-            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y * 100.0);
-            trackBarK.Value = K = Convert.ToInt32(cmyk.K * 100.0);
+            trackBarC.Value = C = Convert.ToInt32(cmyk.C);
+            trackBarM.Value = M = Convert.ToInt32(cmyk.M);
+            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y);
+            trackBarK.Value = K = Convert.ToInt32(cmyk.K);
             ColorXYZ xyz = Converter.RGBtoXYZ(R, G, B);         //!!!!!
             trackBarX.Value = X = Convert.ToInt32(xyz.X * 100.0);
             trackBarY_.Value = Y_ = Convert.ToInt32(xyz.Y * 100.0);
@@ -178,10 +178,10 @@ namespace Grapics_Lab1
 
         private void refreshAll(ColorCMYK color)
         {
-            trackBarC.Value = C = Convert.ToInt32(color.C * 100.0);
-            trackBarM.Value = M = Convert.ToInt32(color.M * 100.0);
-            trackBarY.Value = Y = Convert.ToInt32(color.Y * 100.0);
-            trackBarK.Value = K = Convert.ToInt32(color.K * 100.0);
+            trackBarC.Value = C = Convert.ToInt32(color.C);
+            trackBarM.Value = M = Convert.ToInt32(color.M);
+            trackBarY.Value = Y = Convert.ToInt32(color.Y);
+            trackBarK.Value = K = Convert.ToInt32(color.K);
             ColorRGB rgb = Converter.CMYKtoRGB(color.C, color.M, color.Y, color.K);     //!!!
             R = trackBarR.Value = rgb.R;
             G = trackBarG.Value = rgb.G;
@@ -258,10 +258,10 @@ namespace Grapics_Lab1
             G = trackBarG.Value = rgb.G;
             B = trackBarB.Value = rgb.B;
             ColorCMYK cmyk = Converter.RGBtoCMYK(R, G, B);        //!!!!
-            trackBarC.Value = C = Convert.ToInt32(cmyk.C * 100.0);
-            trackBarM.Value = M = Convert.ToInt32(cmyk.M * 100.0);
-            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y * 100.0);
-            trackBarK.Value = K = Convert.ToInt32(cmyk.K * 100.0);
+            trackBarC.Value = C = Convert.ToInt32(cmyk.C);
+            trackBarM.Value = M = Convert.ToInt32(cmyk.M);
+            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y);
+            trackBarK.Value = K = Convert.ToInt32(cmyk.K);
             ColorHLS hls = Converter.RGBtoHLS(R, G, B);         //!!!!!
             trackBarH.Value = H = hls.H;
             trackBarL.Value = L = Convert.ToInt32(hls.L * 100.0);
@@ -330,10 +330,10 @@ namespace Grapics_Lab1
             G = trackBarG.Value = rgb.G;
             B = trackBarB.Value = rgb.B;
             ColorCMYK cmyk = Converter.RGBtoCMYK(R, G, B);        //!!!!
-            trackBarC.Value = C = Convert.ToInt32(cmyk.C * 100.0);
-            trackBarM.Value = M = Convert.ToInt32(cmyk.M * 100.0);
-            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y * 100.0);
-            trackBarK.Value = K = Convert.ToInt32(cmyk.K * 100.0);
+            trackBarC.Value = C = Convert.ToInt32(cmyk.C);
+            trackBarM.Value = M = Convert.ToInt32(cmyk.M);
+            trackBarY.Value = Y = Convert.ToInt32(cmyk.Y);
+            trackBarK.Value = K = Convert.ToInt32(cmyk.K);
             ColorHLS hls = Converter.RGBtoHLS(R, G, B);         //!!!!!
             trackBarH.Value = H = hls.H;
             trackBarL.Value = L = Convert.ToInt32(hls.L * 100.0);
@@ -439,7 +439,7 @@ namespace Grapics_Lab1
             M = trackBarM.Value;
             Y = trackBarY.Value;
             K = trackBarK.Value;
-            refreshAll(new ColorCMYK(C / 100.0, M / 100.0, Y / 100.0, K / 100.0));
+            refreshAll(new ColorCMYK(C, M, Y, K));
         }
 
         private void Luv_Scroll(object sender, EventArgs e)
@@ -504,7 +504,7 @@ namespace Grapics_Lab1
             M = Convert.ToInt32(numericUpDownM.Value);
             Y = Convert.ToInt32(numericUpDownY.Value);
             K = Convert.ToInt32(numericUpDownK.Value);
-            refreshAll(new ColorCMYK(C / 100.0, M / 100.0, Y / 100.0, K / 100.0));
+            refreshAll(new ColorCMYK(C, M, Y, K));
         }
 
         private void numericCMYK_keyUp(object sender, KeyEventArgs e)
@@ -513,7 +513,7 @@ namespace Grapics_Lab1
             M = Convert.ToInt32(numericUpDownM.Value);
             Y = Convert.ToInt32(numericUpDownY.Value);
             K = Convert.ToInt32(numericUpDownK.Value);
-            refreshAll(new ColorCMYK(C / 100.0, M / 100.0, Y / 100.0, K / 100.0));
+            refreshAll(new ColorCMYK(C, M, Y, K));
         }
 
         private void numericLuv_mouseUp(object sender, MouseEventArgs e)
@@ -589,9 +589,9 @@ namespace Grapics_Lab1
 
     public class ColorCMYK
     {
-        public double C, M, Y, K;
+        public int C, M, Y, K;
 
-        public ColorCMYK(double c, double m, double y, double k)
+        public ColorCMYK(int c, int m, int y, int k)
         {
             C = c;
             M = m;
