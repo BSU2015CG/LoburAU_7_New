@@ -44,7 +44,7 @@ namespace Graphics_Lab3
                 {
                     x1++;
                     tmp += (double)Dy/Dx;
-                    y1 = (int)(tmp + 0.5);
+                    y1 = (int)Math.Ceiling(tmp);
                     result.Add(new Point2D(x1, y1));
                 }
             }
@@ -54,7 +54,7 @@ namespace Graphics_Lab3
                 {
                     y1++;
                     tmp += (double)Dx / Dy;
-                    x1 = (int)(tmp + 0.5);
+                    x1 = (int)Math.Ceiling(tmp);
                     result.Add(new Point2D(x1, y1));
                 }
             }

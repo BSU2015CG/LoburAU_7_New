@@ -43,7 +43,7 @@ namespace Graphics_Lab3
             while (x1 < x2)
             {
                 x1++;
-                result.Add(new Point2D(x1, (int)(k * x1 + b + 0.5)));
+                result.Add(new Point2D(x1, (int)Math.Floor(k * x1 + b)));
             }
 
 
