@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.IO;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace Graphics_Lab2
@@ -22,7 +21,7 @@ namespace Graphics_Lab2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            String imagePath = "Sample.jpg";
+            String imagePath = "Sample.tif";
             currentImage = Image.FromFile(imagePath);
             pictureBox1.Image = currentImage;
             textBox1.Text = imagePath;
@@ -40,11 +39,44 @@ namespace Graphics_Lab2
             }
         }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Stopwatch timer = new Stopwatch();
+
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
+            {
+                string[] files = Directory.GetFiles(folderBrowserDialog1.SelectedPath);
+                int imageCount = files.Length;
+                String currentFile = null;
+
+                if (imageCount == 0)
+                    return;
+          
+                timer.Start();
+                foreach (String file in files)
+                {
+                    if (file.EndsWith(".jpg", true, null) || file.EndsWith(".jpeg", true, null) || file.EndsWith(".png", true, null) || file.EndsWith(".bmp", true, null) || file.EndsWith(".tif", true, null) || file.EndsWith(".gif", true, null))
+                    {
+                        currentFile = file;
+                        showInfo(Image.FromFile(file));
+                    }
+                }
+                timer.Stop();
+
+                if(currentFile != null)
+                    pictureBox1.Image = Image.FromFile(currentFile);
+
+                MessageBox.Show("Image count: " + imageCount + "\nTime: " + timer.ElapsedMilliseconds + " ms.");
+            }
+        }
+
         private void showInfo(Image image)
         {
             textBoxWidth.Text = image.PhysicalDimension.Width.ToString();
             textBoxHeight.Text = image.PhysicalDimension.Height.ToString();
-            textBoxDPI.Text = image.VerticalResolution.ToString();
+            textBoxDPI.Text = ((int)(image.VerticalResolution)).ToString();
+            richTextBox2.Text = "";
+            richTextBox3.Text = "";
 
             richTextBox1.Text = "[Name] : [Type, Value]\n\n";
 
@@ -122,6 +154,19 @@ namespace Graphics_Lab2
                         break;
                     case PropertyTagType.Int16:
                         propValue = BitConverter.ToInt16(property.Value, 0);
+                        if(property.Id == 0x103) //Get compression
+                        {
+                            if(Convert.ToInt32(propValue) == 2)
+                                propValue = "CCITT Group 3";
+                            else if(Convert.ToInt32(propValue) == 3)
+                                propValue = "Facsimile-compatible CCITT Group 3";
+                            else if (Convert.ToInt32(propValue) == 4)
+                                propValue = "CCITT Group 4 (T.6)";
+                            else if (Convert.ToInt32(propValue) == 5)
+                                propValue = "LZW";
+                            else
+                                propValue = "No compression";
+                        }
                         break;
                     case PropertyTagType.SLONG:
                     case PropertyTagType.Int32:
