@@ -7,12 +7,14 @@ using System.Text;
 using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace Graphics_Lab2
 {
     public partial class Form1 : Form
     {
         private Image currentImage;
+        private StreamWriter outFile;
 
         public Form1()
         {
@@ -25,7 +27,7 @@ namespace Graphics_Lab2
             currentImage = Image.FromFile(imagePath);
             pictureBox1.Image = currentImage;
             textBox1.Text = imagePath;
-            showInfo(currentImage);
+            showInfo(currentImage, false);
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -35,13 +37,19 @@ namespace Graphics_Lab2
                 currentImage = Image.FromFile(openFileDialog1.FileName);
                 pictureBox1.Image = currentImage;
                 textBox1.Text = openFileDialog1.FileName;
-                showInfo(currentImage);
+                showInfo(currentImage, false);
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
+            ShowFolderInfo();
+        }
+
+        private void ShowFolderInfo()
+        {
             Stopwatch timer = new Stopwatch();
+            outFile = new StreamWriter("ImageInfo.txt");
 
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
@@ -51,26 +59,51 @@ namespace Graphics_Lab2
 
                 if (imageCount == 0)
                     return;
-          
+
+                WriteToTextbox("Processing images..." + Environment.NewLine);
+
                 timer.Start();
                 foreach (String file in files)
                 {
                     if (file.EndsWith(".jpg", true, null) || file.EndsWith(".jpeg", true, null) || file.EndsWith(".png", true, null) || file.EndsWith(".bmp", true, null) || file.EndsWith(".tif", true, null) || file.EndsWith(".gif", true, null))
                     {
                         currentFile = file;
-                        showInfo(Image.FromFile(file));
+                        outFile.Write(Environment.NewLine + file + Environment.NewLine + Environment.NewLine);
+                        showInfo(Image.FromFile(file), true);
                     }
                 }
                 timer.Stop();
 
-                if(currentFile != null)
+                if (currentFile != null)
                     pictureBox1.Image = Image.FromFile(currentFile);
 
+                AppendToTextbox("Images info saved to file \"ImageInfo.txt\"" + Environment.NewLine);
                 MessageBox.Show("Image count: " + imageCount + "\nTime: " + timer.ElapsedMilliseconds + " ms.");
+                outFile.Close();
             }
         }
 
-        private void showInfo(Image image)
+        private void WriteToTextbox(String message)
+        {
+            textBoxInfo.BeginInvoke(
+                    new Action(() =>
+                    {
+                        textBoxInfo.Text = message;
+                    }
+                ));
+        }
+
+        private void AppendToTextbox(String message)
+        {
+            textBoxInfo.BeginInvoke(
+                    new Action(() =>
+                    {
+                        textBoxInfo.Text += message;
+                    }
+                ));
+        }
+
+        private void showInfo(Image image, bool forFolder)
         {
             textBoxWidth.Text = image.PhysicalDimension.Width.ToString();
             textBoxHeight.Text = image.PhysicalDimension.Height.ToString();
@@ -78,13 +111,17 @@ namespace Graphics_Lab2
             richTextBox2.Text = "";
             richTextBox3.Text = "";
 
-            richTextBox1.Text = "[Name] : [Type, Value]\n\n";
+            if(!forFolder)
+                textBoxInfo.Text = "[Name] : [Type, Value]" + Environment.NewLine + Environment.NewLine;
 
             Dictionary<PropertyTagId, KeyValuePair<PropertyTagType, Object>> imageMeta = getInfo(image);
 
             foreach (KeyValuePair<PropertyTagId, KeyValuePair<PropertyTagType, Object>> property in imageMeta)
             {
-                richTextBox1.Text += property.Key.ToString() + ": " + property.Value.ToString() + "\n";
+                if (forFolder)
+                    outFile.Write(property.Key.ToString() + ": " + property.Value.ToString() + Environment.NewLine);
+                else
+                    textBoxInfo.Text += property.Key.ToString() + ": " + property.Value.ToString() + Environment.NewLine;
             }
 
             if (imageMeta.Keys.Contains(NumToEnum<PropertyTagId>(0x0103)))
